@@ -17,8 +17,12 @@
 
 This is a repository, which has the end-to-end python code to classify license plate text for Department of Motor Vehicle, California.
 
-1.DSAI_Problem_Statement - Here, you can find the actual problem statement.
-2.DSAI_Dataset - Here, you can find sample license plates from DMV,california. Also, the text comments data for classification.
-3.DSAI_Model_Architecture - Here, you can find the text classification model architecture.
-4.DSAI_Model_Implementation_Sourcecode - Here, you can find the related model implementation source code.
-5.DSAI_Model_Outcome - Here, you can find the model outcome as csv file.
+  1.DSAI_Problem_Statement - Here, you can find the actual problem statement. 
+  
+  2.DSAI_Dataset - Here, you can find sample license plates from DMV,california. Also, the text comments data for classification.  
+  
+  3.DSAI_Model_Architecture - Here, you can find the text classification model architecture.  
+  
+  4.DSAI_Model_Implementation_Sourcecode - Here, you can find the related model implementation source code.  
+  
+  5.DSAI_Model_Outcome - Here, you can find the model outcome as csv file.  
