@@ -21,9 +21,9 @@ def css_function(file_name):
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 def all_initialization():
-    image = Image.open('/home/jupyter/DSAI_DMV_Text_Analyzer/DSAI_Model_Implementation_Sourcecode/DSAI_DMV_Utility/DeepSphere_Logo_Final.png')
+    image = Image.open('DSAI_Model_Implementation_Sourcecode/DSAI_DMV_Utility/DMV_Logo.png')
     st.image(image)
-    st.markdown("<h1 style='text-align: center; color: black; font-size:25px;'>Vanity License Plate Analyzer</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: black; font-size:25px;'>Machine Learning Application(MLOps) for Vanity License Plate Analyzer</h1>", unsafe_allow_html=True)
     st.markdown("""
     <hr style="width:100%;height:3px;background-color:gray;border-width:10">
     """, unsafe_allow_html=True)

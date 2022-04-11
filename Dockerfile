@@ -8,7 +8,9 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
-RUN pip install -r /trainer/requirements.txt
+RUN pip install -r requirements.txt
+
+RUN pip install click==7.0
 
 # Sets up the entry point to invoke the trainer.
-CMD streamlit run --server.port 8080 --server.enableCORS false DSAI_Model_Implementation_Sourcecode/app.py
+CMD streamlit run --server.port 8080 --server.enableCORS false --global.developmentMode=false --server.headless=true DSAI_Model_Implementation_Sourcecode/app.py

@@ -21,6 +21,18 @@ font-size: 1rem;
 font-weight: 400;
 }
 
+/* hr {
+    margin: 1em 10px;
+    padding: 0px;
+    color: inherit;
+    background-color: transparent;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-image: initial;
+    border-bottom: 1px solid rgba(49, 51, 63, 0.2);
+} */
+
 div.stButton > button:first-child {border: 1px solid; width: 100%;
     background-color: rgb(47 236 106) ;
 }
@@ -67,7 +79,6 @@ h2 {
     box-shadow: 0 2px 8px 0 #35353533;
     padding: 8px 30px;
     font-size: 20px;
-    margin: auto;
 }
 
 h3{
@@ -101,10 +112,15 @@ margin: -0.5rem 5rem 5rem 1rem;
     }
 
 
+#machine-learning-application-mlops-for-vanity-license-plate-analyzer > div{
+    left: calc(1rem);
+    width: calc(85% + 2.5rem + 0.5rem);
+}
+
 .css-zt5igj {
     position: relative;
-    left: calc(-1rem);
-    width: calc(100% + 0rem + 0rem);
+/*     left: calc(-1rem);
+    width: calc(100% + 0rem + 0rem); */
     display: flex;
     -webkit-box-align: center;
     align-items: center;
@@ -227,4 +243,13 @@ margin: -0.5rem 5rem 5rem 1rem;
 }
 
 
+/* For DMV logo */
+#root > div:nth-child(1) > div > div > div > div > section.main.css-1v3fvcr.eknhn3m1 > div > div:nth-child(1) > div > div:nth-child(2) > div > div > div{
+ width: 200px;   
+}
 
+/* DMV logo alignment */
+.css-18e3th9 {
+ width: 100%;   
+padding: 0rem 0rem 2rem 0rem;
+}

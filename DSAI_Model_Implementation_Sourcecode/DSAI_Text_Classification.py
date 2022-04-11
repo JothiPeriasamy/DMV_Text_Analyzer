@@ -6,6 +6,9 @@ import itertools
 import re
 import tensorflow as tf
 
+import nltk
+nltk.download('stopwords')
+
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer

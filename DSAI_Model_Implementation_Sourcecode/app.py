@@ -10,13 +10,16 @@ if __name__ == "__main__":
     
     st.set_page_config(page_title="DMV Vanity Plate Analyzer", layout="wide")
     try:
-        css_function("/home/jupyter/DSAI_DMV_Text_Analyzer/DSAI_Model_Implementation_Sourcecode/DSAI_DMV_Utility/style.css")
+        css_function("DSAI_Model_Implementation_Sourcecode/DSAI_DMV_Utility/style.css")
         all_initialization()
         ELP_Validation()
-          
+        
     except BaseException as e:
-        st.error('In Error block - '+str(e))
-        traceback.print_exception(*sys.exc_info())
+        col1, col2, col3 = st.columns([1,8,1])
+        with col2:
+            st.write('')
+            st.error('In Error block - '+str(e))
+            traceback.print_exception(*sys.exc_info())
         
         
         
