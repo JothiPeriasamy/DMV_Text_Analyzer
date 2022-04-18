@@ -15,7 +15,7 @@ if __name__ == "__main__":
         ELP_Validation()
         
     except BaseException as e:
-        col1, col2, col3 = st.columns([1,8,1])
+        col1, col2, col3 = st.columns([1.5,9,1.5])
         with col2:
             st.write('')
             st.error('In Error block - '+str(e))

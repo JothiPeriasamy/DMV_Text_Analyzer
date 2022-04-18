@@ -3,7 +3,7 @@ import streamlit as st
 
 def pattern_denial(input_text):
     result = re.findall("^A\d{1,2}$", input_text)
-    col1, col2, col3 = st.columns([2,7,1.5])
+    col1, col2, col3 = st.columns([1.5,9,1.5])
     with col2:
         if len(result)>0:
             if not result:
