@@ -1,6 +1,9 @@
 import re
 import streamlit as st
 
+
+# DMV Denial Patterns with regex
+
 def pattern_denial(input_text):
     result = re.findall("^A\d{1,2}$", input_text)
     col1, col2, col3 = st.columns([1.5,9,1.5])
@@ -8,7 +11,6 @@ def pattern_denial(input_text):
         if len(result)>0:
             if not result:
                 pass
-                # st.info("Passed at State assembly pattern - Not in State assembly pattern")
             elif result[0]==input_text:
                 st.write('')
                 st.error("Denied - Similar to State assembly pattern")
@@ -19,7 +21,6 @@ def pattern_denial(input_text):
 
         if not result:
             pass
-            # st.info("Passed at State senate pattern - Not in State senate pattern")
         else:
             st.write('')
             st.error("Denied - Similar to State senate pattern")
@@ -30,7 +31,6 @@ def pattern_denial(input_text):
 
         if len(result)==0:
             pass
-            # st.info("Passed at US Congress pattern - Not in US Congress pattern")
         else:
             st.write('')
             st.error("Denied - Similar to US Congress pattern")
@@ -41,7 +41,6 @@ def pattern_denial(input_text):
 
         if len(result)==0:
             pass
-            # st.info("Passed at US Congress pattern - Not in US Congress pattern")
         else:
             st.write('')
             st.error("Denied - Similar to OHV pattern")
@@ -52,7 +51,6 @@ def pattern_denial(input_text):
 
         if len(result)==0:
             pass
-            # st.info("Passed at US Congress pattern - Not in US Congress pattern")
         else:
             st.write('')
             st.error("Denied - Similar to HONORARY CONSUL pattern")
@@ -63,7 +61,6 @@ def pattern_denial(input_text):
         
         if len(result)==0:
             pass
-            # st.info("Passed at US Congress pattern - Not in US Congress pattern")
         else:
             st.write('')
             st.error("Denied - Similar to COMMERCIAL pattern")

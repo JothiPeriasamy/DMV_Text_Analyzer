@@ -23,6 +23,6 @@ This is a repository, which has the end-to-end python code to classify license p
   
   3.DSAI_Model_Architecture - Here, you can find the text classification model architecture.  
   
-  4.DSAI_Model_Implementation_Sourcecode - Here, you can find the related model implementation source code. There is no saved model attached with it due to huge size of the file. If anyone need saved model to run this streamlit application, kindly contact info@deepsphere.ai
+  4.DSAI_Model_Implementation_Sourcecode - Here, you can find the related model implementation source code. There is also saved model attached with it.
   
   5.DSAI_Model_Outcome - Here, you can find the model outcome as csv file.  

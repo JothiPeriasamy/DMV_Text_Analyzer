@@ -16,6 +16,7 @@ session_state_order = SessionState.get(name="", vAR_choice_orders=False)
 session_state_recommends = SessionState.get(name="", vAR_choice_recommends=False)
 session_state_search = SessionState.get(name="", vAR_choice_search=False)
 
+# Validate ELP
 def ELP_Validation():
     vAR_model_result = None
     vAR_input_list = []
@@ -33,6 +34,7 @@ def ELP_Validation():
             st.write('')
             vAR_choice_search = st.button('Search')
         
+        # Initialize Session state variable
         if "counter" not in st.session_state:
             st.session_state.counter = 0
         
@@ -72,6 +74,8 @@ def ELP_Validation():
             for vAR_value in vAR_input_list:
                 length = len(vAR_value)
                 vAR_input_len_list.append(length)
+                
+                
             if len(vAR_input_list)>0 and vAR_input_len_list.count(0)<1:
                 vAR_model_result_list = process_result(vAR_input_list)
                 print('Result list - ',vAR_model_result_list)
@@ -91,8 +95,6 @@ def ELP_Validation():
                         with col2:
                             st.write('')
                             st.info('Development in-progress')
-                            
-                    
                 
             else:
                 col1, col2, col3 = st.columns([1.5,9,1.5])
@@ -111,7 +113,6 @@ def ELP_Validation():
                 st.info("Search and Recommendations Functionality Development is in-progress")
     except AttributeError:
         pass
-        # session_state_recommends.vAR_choice_recommends = True
 
         
 @st.cache(show_spinner=False)
@@ -144,12 +145,7 @@ def lstm_model_result(vAR_input_text):
     vAR_result_data.index = pd.Index(['Percentage'],name='category')
     vAR_result_data = vAR_result_data.astype(float).round(5)*100
     
-    # col1, col2, col3 = st.columns([3,4,3])
-    # with col2:
-    #     st.write('')
-    #     st.write(vAR_result_data.transpose())
-    #     st.write('Sum of all Category values - '+str(vAR_target_sum))
-    
+
     # Sum of predicted value with 20% as threshold
     if vAR_target_sum>20:
         return False,vAR_result_data,vAR_target_sum
@@ -195,12 +191,6 @@ def bert_model_result(vAR_input_text):
     vAR_result_data.index = pd.Index(['Percentage'],name='category')
     vAR_result_data = vAR_result_data.astype(float).round(5)*100
     
-    # col1, col2, col3 = st.columns([3,4,3])
-    # with col2:
-    #     st.write('')
-    #     st.write(vAR_result_data.transpose())
-    #     st.write('Sum of all Category values - '+str(vAR_target_sum))
-    # return False  if vAR_target_sum>20 else True
     if vAR_target_sum>20:
         return False,vAR_result_data,vAR_target_sum
     else:
