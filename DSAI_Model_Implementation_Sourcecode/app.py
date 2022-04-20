@@ -5,10 +5,12 @@ from DSAI_Text_Classification import ClassificationModels
 from DSAI_DMV_Layout import ELP_Validation
 import traceback
 import sys
+from PIL import Image
 
 if __name__ == "__main__":
     
-    st.set_page_config(page_title="DMV Vanity Plate Analyzer", layout="wide")
+    img = Image.open('DSAI_Model_Implementation_Sourcecode/DSAI_DMV_Utility/DMV_Logo.png')
+    st.set_page_config(page_title="DMV Vanity Plate Analyzer", layout="wide",page_icon=img)
     try:
         css_function("DSAI_Model_Implementation_Sourcecode/DSAI_DMV_Utility/style.css")
         all_initialization()

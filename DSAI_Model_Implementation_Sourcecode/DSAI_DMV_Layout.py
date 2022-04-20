@@ -18,6 +18,8 @@ session_state_search = SessionState.get(name="", vAR_choice_search=False)
 
 def ELP_Validation():
     vAR_model_result = None
+    vAR_input_list = []
+    vAR_input_len_list = []
     try:
         col5,col6,col7,col8,col9 = st.columns([1.5,3,3,3,1.5])
 
@@ -53,71 +55,52 @@ def ELP_Validation():
                 st.write('')
                 st.write('')
                 st.write('')
-                st.subheader('ELP Configuration')
+                st.subheader('No.Of Configuration')
+                
             with col4:
                 st.write('')
-                vAR_input_text = st.text_input('Enter input','').upper()
-            if len(vAR_input_text)>0:
-                vAR_pattern_result = pattern_denial(vAR_input_text)
-                if  vAR_pattern_result:
+                vAR_number_of_config = st.number_input('',step=1,max_value=4,value=1)
+                
+            for vAR_idx in range(0,vAR_number_of_config):
+                with col2:
                     st.write('')
+                    st.write('')
+                    st.subheader('ELP Configuration '+str(vAR_idx+1))
+                with col4:
+                    vAR_input_text = st.text_input('Enter input','',key=str(vAR_idx)).upper()
+                    vAR_input_list.append(vAR_input_text)
+            for vAR_value in vAR_input_list:
+                length = len(vAR_value)
+                vAR_input_len_list.append(length)
+            if len(vAR_input_list)>0 and vAR_input_len_list.count(0)<1:
+                vAR_model_result_list = process_result(vAR_input_list)
+                print('Result list - ',vAR_model_result_list)
+                print('input list - ',vAR_input_list)
+                if vAR_model_result_list.count(False)>0:
                     col1, col2, col3 = st.columns([1.5,9,1.5])
                     with col2:
-                        st.info('ELP Successfully processed for 1st Level')
-                    col1, col2, col3, col4,col_ = st.columns([1.5,4,1,4,1.5])
+                        st.write('')
+                        st.warning('Please try again with another configuration to proceed further')
+                elif vAR_model_result_list.count(True)==len(vAR_input_list):
+                    col1, col2, col3 = st.columns([1.5,9,1.5])
                     with col2:
                         st.write('')
-                        st.write('')
-                        st.subheader('Select Model')
-                    with col4:
-                        vAR_model = st.selectbox('',('Select Model','BERT','LSTM-RNN'))
-                    if vAR_model == 'LSTM-RNN':
-                        vAR_model_result,vAR_result_data,vAR_target_sum = lstm_model_result(vAR_input_text) 
-                        col1, col2, col3 = st.columns([3,4,3])
-                        with col2:
-                            st.write('')
-                            st.write(vAR_result_data.transpose())
-                            st.write('Sum of all Category values - '+str(vAR_target_sum))
-                    elif vAR_model == 'BERT':
-                        vAR_model_result,vAR_result_data,vAR_target_sum = bert_model_result(vAR_input_text)
-                        col1, col2, col3 = st.columns([3,4,3])
-                        with col2:
-                            st.write('')
-                            st.write(vAR_result_data.transpose())
-                            st.write('Sum of all Category values - '+str(vAR_target_sum))
-                    elif vAR_model=='Select Model':
-                        st.write('')
+                        vAR_payment = st.button("Initiate Payment to order license plate")
+                    if vAR_payment:
                         col1, col2, col3 = st.columns([1.5,9,1.5])
                         with col2:
                             st.write('')
-                            st.warning('Select model for 2nd level check')
-                    if vAR_model_result:
-                        col1, col2, col3 = st.columns([1.5,9,1.5])
-                        with col2:
-                            st.write('')
-                            st.info('ELP Successfully processed for 2nd Level')
-                            st.write('')
-                            st.success('ELP Configuration Approved Successfully')
-                    elif vAR_model_result==False:
-                        col1, col2, col3 = st.columns([1.5,9,1.5])
-                        with col2:
-                            st.write('')
-                            st.error('ELP Configuration Failed to Meet the DMV Requirements at 2nd level')
-                            denial_letter()
+                            st.info('Development in-progress')
                             
-                        
-                            
-                else:
-                    col1, col2, col3 = st.columns([1.3,7.6,1.3])
-                    with col2:
-                        st.write('')
-                        st.error('ELP Configuration Failed to Meet the DMV Requirements at 1st level')
-                        denial_letter()
+                    
+                
             else:
                 col1, col2, col3 = st.columns([1.5,9,1.5])
                 with col2:
                     st.write('')
                     st.warning("Please enter input details")
+
+
 
         elif (session_state_recommends.vAR_choice_recommends or session_state_search.vAR_choice_search) and st.session_state.counter!=0:
             session_state_order.vAR_choice_orders = False
@@ -149,10 +132,13 @@ def lstm_model_result(vAR_input_text):
     print('Data Preprocessing Completed')
     vAR_X,vAR_y = vAR_model_obj.word_embedding_vectorization(vAR_corpus,vAR_test_data)
     print('Vectorization Completed Using Word Embedding')
+    print('var X - ',vAR_X)
+    print('var Y - ',vAR_y)
     
     vAR_load_model = tf.keras.models.load_model('DSAI_Model_Implementation_Sourcecode/LSTM_RNN_Model')
 
     vAR_model_result = vAR_load_model.predict(vAR_X)
+    print('LSTM result - ',vAR_model_result)
     vAR_result_data = pd.DataFrame(vAR_model_result,columns=vAR_target_columns)
     vAR_target_sum = (np.sum(vAR_model_result)*100).round(2)
     vAR_result_data.index = pd.Index(['Percentage'],name='category')
@@ -222,11 +208,80 @@ def bert_model_result(vAR_input_text):
  
     
     
+def process_result(vAR_input_list):
+    vAR_model_result = None
+    vAR_model_result_list = [None]*4
+    for vAR_idx,vAR_val in enumerate(vAR_input_list):
+        vAR_pattern_result = pattern_denial(vAR_val)
+        if  vAR_pattern_result:
+            st.write('')
+            col1, col2, col3 = st.columns([1.5,9,1.5])
+            with col2:
+                st.info('ELP Configuration **'+vAR_val+ '** Successfully processed for 1st Level')
+            col1, col2, col3, col4,col_ = st.columns([1.5,4,1,4,1.5])
+            with col2:
+                st.write('')
+                st.write('')
+                st.subheader('Select Model')
+            with col4:
+                vAR_model = st.selectbox('',('Select Model','BERT','LSTM-RNN'),key=str(vAR_idx))
+            if vAR_model == 'LSTM-RNN':
+                col1, col2, col3 = st.columns([1.5,9,1.5])
+                with col2:
+                    st.write('')
+                    with st.spinner(text='Model Prediction is in-progress'):
+                        vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = lstm_model_result(vAR_val) 
+                col1, col2, col3 = st.columns([3,4,3])
+                with col2:
+                    st.write('')
+                    st.write(vAR_result_data.transpose())
+                    st.write('Sum of all Category values for configuration **'+vAR_val+ '** - '+str(vAR_target_sum))
+            elif vAR_model == 'BERT':
+                col1, col2, col3 = st.columns([1.5,9,1.5])
+                with col2:
+                    st.write('')
+                    with st.spinner(text='Model Prediction is in-progress'):
+                        vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = bert_model_result(vAR_val)
+                col1, col2, col3 = st.columns([3,4,3])
+                with col2:
+                    st.write('')
+                    st.write(vAR_result_data.transpose())
+                    st.write('Sum of all Category values for configuration **'+vAR_val+ '** - '+str(vAR_target_sum))
+            elif vAR_model=='Select Model':
+                st.write('')
+                col1, col2, col3 = st.columns([1.5,9,1.5])
+                with col2:
+                    st.write('')
+                    st.warning('Select model for 2nd level check for configuration** '+vAR_val+'**')
+            if vAR_model_result_list[vAR_idx]:
+                col1, col2, col3 = st.columns([1.5,9,1.5])
+                with col2:
+                    st.write('')
+                    st.info('ELP Configuration **'+vAR_val+ '** Successfully processed for 2nd Level')
+                    st.write('')
+                    st.success('ELP Configuration **'+vAR_val+ '** Approved Successfully')
+            elif vAR_model_result_list[vAR_idx]==False:
+                col1, col2, col3 = st.columns([1.5,9,1.5])
+                with col2:
+                    st.write('')
+                    st.error('ELP Configuration **'+vAR_val+ '** Failed to Meet the DMV Requirements at 2nd level')
+                    denial_letter(vAR_idx)
+            # vAR_model_result_list.append(vAR_model_result_list[vAR_idx])
+
+        else:
+            col1, col2, col3 = st.columns([1.3,7.6,1.3])
+            with col2:
+                st.write('')
+                st.error('ELP Configuration **'+vAR_val+ '** Failed to Meet the DMV Requirements at 1st level')
+                denial_letter(vAR_idx)
+                
+    return vAR_model_result_list
+
     
     
-def denial_letter():
+def denial_letter(vAR_idx):
     st.write('')
-    vAR_denial_letter = st.button("Click here to view denial letter")
+    vAR_denial_letter = st.button("Click here to view denial letter",key=str(vAR_idx))
     if vAR_denial_letter:
         js = "window.open('https://datastudio.google.com/reporting/eb175286-477a-4d4c-ac6b-303a40a820d9')"
         html = '<img src onerror="{}">'.format(js)
