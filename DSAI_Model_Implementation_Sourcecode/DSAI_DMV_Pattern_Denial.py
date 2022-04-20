@@ -4,7 +4,7 @@ import streamlit as st
 
 # DMV Denial Patterns with regex
 
-def pattern_denial(input_text):
+def Pattern_Denial(input_text):
     result = re.findall("^A\d{1,2}$", input_text)
     col1, col2, col3 = st.columns([1.5,9,1.5])
     with col2:

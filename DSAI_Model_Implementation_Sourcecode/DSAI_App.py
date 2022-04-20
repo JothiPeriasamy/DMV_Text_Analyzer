@@ -1,6 +1,6 @@
 import streamlit as st
 
-from DSAI_DMV_Utility.DSAI_Utility import all_initialization,css_function
+from DSAI_DMV_Utility.DSAI_Utility import All_Initialization,CSS_Property
 from DSAI_Text_Classification import ClassificationModels
 from DSAI_DMV_Layout import ELP_Validation
 import traceback
@@ -13,9 +13,9 @@ if __name__ == "__main__":
     st.set_page_config(page_title="DMV Vanity Plate Analyzer", layout="wide",page_icon=img)
     try:
         # Applying CSS properties for web page
-        css_function("DSAI_Model_Implementation_Sourcecode/DSAI_DMV_Utility/style.css")
+        CSS_Property("DSAI_Model_Implementation_Sourcecode/DSAI_DMV_Utility/style.css")
         # Initializing Basic Componentes of Web Page
-        all_initialization()
+        All_Initialization()
         # ELP Validation Function call
         ELP_Validation()
         

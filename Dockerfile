@@ -15,4 +15,4 @@ RUN pip install click==7.0
 RUN pip install tf-nightly
 
 # Sets up the entry point to invoke the trainer.
-CMD streamlit run --server.port 8080 --server.enableCORS false --global.developmentMode=false --server.headless=true DSAI_Model_Implementation_Sourcecode/app.py
+CMD streamlit run --server.port 8080 --server.enableCORS false --global.developmentMode=false --server.headless=true DSAI_Model_Implementation_Sourcecode/DSAI_App.py

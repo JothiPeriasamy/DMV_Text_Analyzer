@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-from DSAI_DMV_Pattern_Denial import pattern_denial
+from DSAI_DMV_Pattern_Denial import Pattern_Denial
 from DSAI_Text_Classification import ClassificationModels
 # Load Huggingface transformers
 from transformers import TFBertModel,  BertConfig, BertTokenizerFast, TFAutoModel
@@ -77,7 +77,7 @@ def ELP_Validation():
                 
                 
             if len(vAR_input_list)>0 and vAR_input_len_list.count(0)<1:
-                vAR_model_result_list = process_result(vAR_input_list)
+                vAR_model_result_list = Process_Result(vAR_input_list)
                 print('Result list - ',vAR_model_result_list)
                 print('input list - ',vAR_input_list)
                 if vAR_model_result_list.count(False)>0:
@@ -116,7 +116,7 @@ def ELP_Validation():
 
         
 @st.cache(show_spinner=False)
-def lstm_model_result(vAR_input_text):
+def LSTM_Model_Result(vAR_input_text):
     # Input Data Preprocessing
     vAR_data = pd.DataFrame()
     vAR_target_columns = ['Toxic','Severe Toxic','Obscene','Threat','Insult','Identity Hate']
@@ -154,7 +154,7 @@ def lstm_model_result(vAR_input_text):
 
 
 @st.cache(show_spinner=False)
-def bert_model_result(vAR_input_text):
+def BERT_Model_Result(vAR_input_text):
     
     vAR_test_sentence = vAR_input_text
     vAR_target_columns = ['Toxic','Severe Toxic','Obscene','Threat','Insult','Identity Hate']
@@ -198,11 +198,11 @@ def bert_model_result(vAR_input_text):
  
     
     
-def process_result(vAR_input_list):
+def Process_Result(vAR_input_list):
     vAR_model_result = None
     vAR_model_result_list = [None]*4
     for vAR_idx,vAR_val in enumerate(vAR_input_list):
-        vAR_pattern_result = pattern_denial(vAR_val)
+        vAR_pattern_result = Pattern_Denial(vAR_val)
         if  vAR_pattern_result:
             st.write('')
             col1, col2, col3 = st.columns([1.5,9,1.5])
@@ -220,7 +220,7 @@ def process_result(vAR_input_list):
                 with col2:
                     st.write('')
                     with st.spinner(text='Model Prediction is in-progress'):
-                        vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = lstm_model_result(vAR_val) 
+                        vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = LSTM_Model_Result(vAR_val) 
                 col1, col2, col3 = st.columns([3,4,3])
                 with col2:
                     st.write('')
@@ -231,7 +231,7 @@ def process_result(vAR_input_list):
                 with col2:
                     st.write('')
                     with st.spinner(text='Model Prediction is in-progress'):
-                        vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = bert_model_result(vAR_val)
+                        vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = BERT_Model_Result(vAR_val)
                 col1, col2, col3 = st.columns([3,4,3])
                 with col2:
                     st.write('')
@@ -255,7 +255,7 @@ def process_result(vAR_input_list):
                 with col2:
                     st.write('')
                     st.error('ELP Configuration **'+vAR_val+ '** Failed to Meet the DMV Requirements at 2nd level')
-                    denial_letter(vAR_idx)
+                    Denial_Letter(vAR_idx)
             # vAR_model_result_list.append(vAR_model_result_list[vAR_idx])
 
         else:
@@ -263,13 +263,13 @@ def process_result(vAR_input_list):
             with col2:
                 st.write('')
                 st.error('ELP Configuration **'+vAR_val+ '** Failed to Meet the DMV Requirements at 1st level')
-                denial_letter(vAR_idx)
+                Denial_Letter(vAR_idx)
                 
     return vAR_model_result_list
 
     
     
-def denial_letter(vAR_idx):
+def Denial_Letter(vAR_idx):
     st.write('')
     vAR_denial_letter = st.button("Click here to view denial letter",key=str(vAR_idx))
     if vAR_denial_letter:

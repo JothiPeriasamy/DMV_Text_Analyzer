@@ -16,11 +16,11 @@
 import streamlit as st
 from PIL import Image
 
-def css_function(file_name):
+def CSS_Property(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-def all_initialization():
+def All_Initialization():
     image = Image.open('DSAI_Model_Implementation_Sourcecode/DSAI_DMV_Utility/DMV_Logo.png')
     st.image(image)
     st.markdown("<h1 style='text-align: center; color: black; font-size:25px;'>Machine Learning Application(MLOps) for Vanity License Plate Analyzer</h1>", unsafe_allow_html=True)
