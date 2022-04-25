@@ -183,7 +183,7 @@ def BERT_Model_Result(vAR_input_text):
     return_attention_mask = True,
     verbose = True)
     
-    vAR_load_model = tf.keras.models.load_model('DSAI_Model_Implementation_Sourcecode/BERT_MODEL')
+    vAR_load_model = tf.keras.models.load_model('DSAI_Model_Implementation_Sourcecode/BERT_MODEL_64B_4e5LR_3E')
 
     vAR_model_result = vAR_load_model.predict(x={'input_ids': vAR_test_x['input_ids'], 'attention_mask': vAR_test_x['attention_mask']},batch_size=32)
     vAR_result_data = pd.DataFrame(vAR_model_result,columns=vAR_target_columns)
