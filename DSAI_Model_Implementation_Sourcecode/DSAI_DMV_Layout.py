@@ -8,6 +8,7 @@ from DSAI_Text_Classification import ClassificationModels
 from transformers import TFBertModel,  BertConfig, BertTokenizerFast, TFAutoModel
 from DSAI_DMV_Utility import SessionState
 from bokeh.models.widgets import Div
+import time
 
 
 # import SessionState
@@ -37,6 +38,8 @@ def ELP_Validation():
         # Initialize Session state variable
         if "counter" not in st.session_state:
             st.session_state.counter = 0
+            
+        
         
         if vAR_choice_orders:
             session_state_order.vAR_choice_orders = True
@@ -156,6 +159,8 @@ def LSTM_Model_Result(vAR_input_text):
 @st.cache(show_spinner=False)
 def BERT_Model_Result(vAR_input_text):
     
+    
+    
     vAR_test_sentence = vAR_input_text
     vAR_target_columns = ['Toxic','Severe Toxic','Obscene','Threat','Insult','Identity Hate']
     
@@ -182,10 +187,16 @@ def BERT_Model_Result(vAR_input_text):
     return_token_type_ids = False,
     return_attention_mask = True,
     verbose = True)
-    
+    start_time = time.time()
     vAR_load_model = tf.keras.models.load_model('DSAI_Model_Implementation_Sourcecode/BERT_MODEL_64B_4e5LR_3E')
+    print("--- %s seconds ---" % (time.time() - start_time))
+    
 
     vAR_model_result = vAR_load_model.predict(x={'input_ids': vAR_test_x['input_ids'], 'attention_mask': vAR_test_x['attention_mask']},batch_size=32)
+    
+    # if "vAR_load_model" not in st.session_state:
+    #     st.session_state.vAR_load_model = tf.keras.models.load_model('DSAI_Model_Implementation_Sourcecode/BERT_MODEL_64B_4e5LR_3E')
+    # vAR_model_result = st.session_state.vAR_load_model.predict(x={'input_ids': vAR_test_x['input_ids'], 'attention_mask': vAR_test_x['attention_mask']},batch_size=32)
     vAR_result_data = pd.DataFrame(vAR_model_result,columns=vAR_target_columns)
     vAR_target_sum = (np.sum(vAR_model_result)*100).round(2)
     vAR_result_data.index = pd.Index(['Percentage'],name='category')

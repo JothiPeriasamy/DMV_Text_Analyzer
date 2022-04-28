@@ -1,73 +1,53 @@
 import re
 import streamlit as st
+import pandas as pd
+from google.cloud import bigquery
 
 
-# DMV Denial Patterns with regex
 
 def Pattern_Denial(input_text):
-    result = re.findall("^A\d{1,2}$", input_text)
+    
+    # Below configurations needs to be update in bigquery table
+    
+    # 1.3 numbers, 2 letters 000AA-000E0 RESERVED Between AA-E0
+    # 2.4 numbers 1111 PREV. ASSIGNED Check R60 4E/4S
+    # 3.5 numbers 11111 PREV. ASSIGNED Check R60 4E/4S
+    vAR_regex_pattern_data = Read_Bigquery_Data()
+    # vAR_regex_pattern_data = pd.read_csv('DSAI_Model_Implementation_Sourcecode/DSAI_Regex_Pattern.tsv',sep='\t')
+    
     col1, col2, col3 = st.columns([1.5,9,1.5])
     with col2:
-        if len(result)>0:
-            if not result:
+    
+        for vAR_index, vAR_row in vAR_regex_pattern_data.iterrows():
+            vAR_result = re.findall(vAR_row['REGEX_CONFIGURATION'],input_text)
+            if len(vAR_result)==0:
                 pass
-            elif result[0]==input_text:
+            else:
                 st.write('')
-                st.error("Denied - Similar to State assembly pattern")
+                st.error("Denied - Similar to " +vAR_row['DENIAL_PATTERN']+ " Pattern")
                 return False
-
-            
-        result = re.findall("^S[0-9]{1,2}[a-zA-Z]{1}$", input_text)
-
-        if not result:
-            pass
-        else:
-            st.write('')
-            st.error("Denied - Similar to State senate pattern")
-            return False
-
         
-        result = re.findall("^C\d{1,2}\w{1}\d{1}$", input_text)
-
-        if len(result)==0:
-            pass
-        else:
-            st.write('')
-            st.error("Denied - Similar to US Congress pattern")
-            return False
-    
-    
-        result = re.findall("^[a-zA-Z]{1}\d{2}[a-zA-Z]{1}\d{2}$", input_text)
-
-        if len(result)==0:
-            pass
-        else:
-            st.write('')
-            st.error("Denied - Similar to OHV pattern")
-            return False
-        
-        
-        result = re.findall("^H\d{4}$", input_text)
-
-        if len(result)==0:
-            pass
-        else:
-            st.write('')
-            st.error("Denied - Similar to HONORARY CONSUL pattern")
-            return False
-        
-        
-        result = re.findall("^[a-zA-Z]{1}\d{5}$", input_text)
-        
-        if len(result)==0:
-            pass
-        else:
-            st.write('')
-            st.error("Denied - Similar to COMMERCIAL pattern")
-            return False
-    
-    
-    
-    
     return True
     
+    
+    
+def Read_Bigquery_Data():
+
+    bqclient = bigquery.Client()
+
+    # Download query results.
+    query_string = """
+    SELECT * FROM `flydubai-338806.DSAI_DMV_DATASET.DSAI_DMV_DENIED_PATTERN`
+    """
+
+    dataframe = (
+        bqclient.query(query_string)
+        .result()
+        .to_dataframe(
+            # Optionally, explicitly request to use the BigQuery Storage API. As of
+            # google-cloud-bigquery version 1.26.0 and above, the BigQuery Storage
+            # API is used by default.
+            create_bqstorage_client=True,
+        )
+    )
+    return dataframe
