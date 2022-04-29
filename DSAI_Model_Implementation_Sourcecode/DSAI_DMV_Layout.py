@@ -60,10 +60,14 @@ def ELP_Validation():
                 st.write('')
                 st.write('')
                 st.write('')
+                st.subheader('Email Address')
+                st.write('')
+                st.write('')
                 st.subheader('No.Of Configuration')
                 
             with col4:
                 st.write('')
+                vAR_email = st.text_input('')
                 vAR_number_of_config = st.number_input('',step=1,max_value=4,value=1)
                 
             for vAR_idx in range(0,vAR_number_of_config):
