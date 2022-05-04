@@ -15,7 +15,7 @@ def Pattern_Denial(input_text):
     vAR_regex_pattern_data = Read_Bigquery_Data()
     # vAR_regex_pattern_data = pd.read_csv('DSAI_Model_Implementation_Sourcecode/DSAI_Regex_Pattern.tsv',sep='\t')
     
-    col1, col2, col3 = st.columns([1.5,9,1.5])
+    col1, col2, col3 = st.columns([1.3,7.6,1.3])
     with col2:
     
         for vAR_index, vAR_row in vAR_regex_pattern_data.iterrows():

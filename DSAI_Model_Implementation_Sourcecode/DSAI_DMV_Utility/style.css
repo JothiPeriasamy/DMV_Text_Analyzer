@@ -67,7 +67,7 @@ a{
 h2 {
     font-family: "Source Sans Pro", sans-serif;
     font-weight: 600;
-    color: #eee;
+/*     color: #eee; */
     letter-spacing: -0.005em;
     padding: 1rem 0px;
     margin: 0px;
@@ -78,7 +78,7 @@ h2 {
 .css-10trblm{
     box-shadow: 0 2px 8px 0 #35353533;
     padding: 8px 30px;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 h3{

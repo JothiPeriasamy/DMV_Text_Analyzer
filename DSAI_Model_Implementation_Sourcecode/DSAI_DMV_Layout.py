@@ -9,6 +9,7 @@ from transformers import TFBertModel,  BertConfig, BertTokenizerFast, TFAutoMode
 from DSAI_DMV_Utility import SessionState
 from bokeh.models.widgets import Div
 import time
+from streamlit_option_menu import option_menu
 
 
 # import SessionState
@@ -22,6 +23,7 @@ def ELP_Validation():
     vAR_model_result = None
     vAR_input_list = []
     vAR_input_len_list = []
+    vAR_personal = False
     try:
         col5,col6,col7,col8,col9 = st.columns([1.5,3,3,3,1.5])
 
@@ -54,60 +56,125 @@ def ELP_Validation():
             session_state_order.vAR_choice_orders = False
         
         if session_state_order.vAR_choice_orders and st.session_state.counter!=0:
-            col1, col2, col3, col4,col_ = st.columns([1.5,4,1,4,1.5])
+            col1,col2,col3 = st.columns([1.15,7.1,1.15])
+            col4, col5, col6, col7,col8 = st.columns([1.5,4,1,4,1.5])
+            
+            col9,col10,col11 = st.columns([1.15,7.1,1.15])
+            col12, col13, col14, col15,col16 = st.columns([1.5,4,1,4,1.5])
+            
+            col17,col18,col19 = st.columns([1.15,7.1,1.15])
+            col20, col21, col22, col23,col24 = st.columns([1.5,4,1,4,1.5])
+            
             st.session_state.counter+=1
             with col2:
+                st.markdown("<h1 style='text-align: center; color: black; font-size:15px;'>Section 1 - Plate Selection -  Check one (For special plates not listed, use REG 17A)</h1>", unsafe_allow_html=True)
+            with col5:
                 st.write('')
+                st.subheader('Plates allowed 2-6 Characters')
                 st.write('')
-                st.write('')
-                st.subheader('Email Address')
-                st.write('')
-                st.write('')
-                st.subheader('No.Of Configuration')
+                vAR_breast_cancer = st.checkbox('Breast Cancer Awareness')
+                vAR_california_arts = st.checkbox('California Arts Council')
+                vAR_california_agri = st.checkbox('California Agricultural')
+                vAR_california_memorial = st.checkbox('California Memorial')
+                vAR_california_museums = st.checkbox('California Museums')
+                vAR_collegiate = st.checkbox('Collegiate (only UCLA is available)')
+                vAR_kids = st.checkbox('Kids - Child Health and Safety Funds (SYMBOLS: HEART, STAR, HAND OR PLUS SIGN)')
                 
-            with col4:
+            with col7:
                 st.write('')
-                vAR_email = st.text_input('')
-                vAR_number_of_config = st.number_input('',step=1,max_value=4,value=1)
+                st.subheader('Plates allowed 2-7 Characters')
+                st.write('')
+                vAR_elp = st.checkbox('Environmental License Plate (ELP) (BASIC PERSONALIZED PLATE)')
+                vAR_california_coastal = st.checkbox('California Coastal Commission (Whale Tail)')
+                vAR_lake_tahoe = st.checkbox('Lake Tahoe Conservancy')
+                vAR_yosemite = st.checkbox('Yosemite Foundation')
+                vAR_california = st.checkbox('California 1960s Legacy (6 character sequential, 2-7 characters for ELP)')
                 
-            for vAR_idx in range(0,vAR_number_of_config):
-                with col2:
+                
+            with col10:
+                st.markdown("<h1 style='text-align: center; color: black; font-size:15px;'>Section 2 - Select Configuration</h1>", unsafe_allow_html=True)
+                st.write('')
+                vAR_sequential = st.checkbox('Sequential (Non-Personalized) — Issued in number sequence')
+                st.write('Note : Your existing sequential license plate number cannot be re-used. You must submit a copy of your current registration card. ')
+            print('checkbox value - ',vAR_sequential)
+            if vAR_sequential and not vAR_personal:
+                with col13:
+                    vAR_current_plate = st.text_input('Current License Plate Number','',key='current_plate')
+                with col15:
+                    vAR_vehicle_id = st.text_input('Full Vehicle Id Number','',key='current_plate')
+            with col18:
+                vAR_personal = st.checkbox('Personalized Configuration Choice')
+                st.write('''Note : DMV has the right to refuse any combination of letters and/or letters and numbers for any of the following reason(s): it could be considered
+offensive to good taste and decency in any language or slang term, it substitutes letters for numbers or vice versa (e.g. ROBERT/RO8ERT),
+to look like another personalized plate, or it conflicts with any regular license plate series issued.
+Your application will not be accepted if the MEANING of the plate is not entered, even if it appears obvious, OR if the plate configuration
+is unacceptable''')
+                st.write("**For KIDS Plate : **Select Choice of Symbol")
+                vAR_icons = option_menu(None, ["Heart", "Star", "Plus", 'Hand'], 
+    icons=['heart-fill', 'star-fill', "align-middle", 'hand-index-thumb-fill'], 
+    menu_icon="cast", default_index=0, orientation="horizontal")
+            if vAR_personal and not vAR_sequential:
+                with col21:
                     st.write('')
                     st.write('')
-                    st.subheader('ELP Configuration '+str(vAR_idx+1))
-                with col4:
-                    vAR_input_text = st.text_input('Enter input','',key=str(vAR_idx)).upper()
-                    vAR_input_list.append(vAR_input_text)
-            for vAR_value in vAR_input_list:
-                length = len(vAR_value)
-                vAR_input_len_list.append(length)
-                
-                
-            if len(vAR_input_list)>0 and vAR_input_len_list.count(0)<1:
-                vAR_model_result_list = Process_Result(vAR_input_list)
-                print('Result list - ',vAR_model_result_list)
-                print('input list - ',vAR_input_list)
-                if vAR_model_result_list.count(False)>0:
-                    col1, col2, col3 = st.columns([1.5,9,1.5])
-                    with col2:
+                    st.subheader('No.Of Configuration')
+
+
+                with col23:
+                    vAR_number_of_config = st.number_input('',step=1,max_value=3,value=1)
+
+                for vAR_idx in range(0,vAR_number_of_config):
+                    with col21:
                         st.write('')
-                        st.warning('Please try again with another configuration to proceed further')
-                elif vAR_model_result_list.count(True)==len(vAR_input_list):
-                    col1, col2, col3 = st.columns([1.5,9,1.5])
-                    with col2:
                         st.write('')
-                        vAR_payment = st.button("Initiate Payment to order license plate")
-                    if vAR_payment:
+                        st.write('')
+                        if vAR_idx==1 or vAR_idx==2:
+                            st.write('')
+                            st.write('')
+                            st.write('')
+                            st.write('')
+                            st.write('')
+                            st.write('')
+                            st.write('')
+                        st.subheader('ELP Configuration '+str(vAR_idx+1))
+                    with col23:
+                        st.write('')
+                        if vAR_idx==2:
+                            st.write('')
+                        vAR_input_text = st.text_input('Enter input','',key=str(vAR_idx),max_chars=7).upper().strip()
+                        vAR_meaning = st.text_input('Meaning','',key=str('meaning'+str(vAR_idx)),max_chars=150)
+                        vAR_input_list.append(vAR_input_text)
+                for vAR_value in vAR_input_list:
+                    length = len(vAR_value)
+                    vAR_input_len_list.append(length)
+
+
+                if len(vAR_input_list)>0 and vAR_input_len_list.count(0)<1:
+                    vAR_model_result_list = Process_Result(vAR_input_list)
+                    print('Result list - ',vAR_model_result_list)
+                    print('input list - ',vAR_input_list)
+                    if vAR_model_result_list.count(False)>0:
                         col1, col2, col3 = st.columns([1.5,9,1.5])
                         with col2:
                             st.write('')
-                            st.info('Development in-progress')
-                
-            else:
-                col1, col2, col3 = st.columns([1.5,9,1.5])
-                with col2:
-                    st.write('')
-                    st.warning("Please enter input details")
+                            st.warning('Please try again with another configuration to proceed further')
+                    elif vAR_model_result_list.count(True)==len(vAR_input_list):
+                        col1, col2, col3 = st.columns([1.5,9,1.5])
+                        with col2:
+                            st.write('')
+                            vAR_payment = st.button("Initiate Payment to order license plate")
+                        if vAR_payment:
+                            col1, col2, col3 = st.columns([1.5,9,1.5])
+                            with col2:
+                                st.write('')
+                                st.info('Development in-progress')
+
+                else:
+                    col1, col2, col3 = st.columns([1.15,7.1,1.15])
+                    with col2:
+                        st.write('')
+                        st.write('')
+                        st.warning("Please enter input details")
 
 
 
@@ -159,7 +226,14 @@ def LSTM_Model_Result(vAR_input_text):
     else:
         return True,vAR_result_data,vAR_target_sum
 
-
+    
+    
+@st.cache(show_spinner=False)    
+def Load_BERT_Model():
+    vAR_load_model = tf.keras.models.load_model('DSAI_Model_Implementation_Sourcecode/BERT_MODEL_64B_4e5LR_3E')
+    return vAR_load_model
+    
+    
 @st.cache(show_spinner=False)
 def BERT_Model_Result(vAR_input_text):
     
@@ -193,6 +267,7 @@ def BERT_Model_Result(vAR_input_text):
     verbose = True)
     start_time = time.time()
     vAR_load_model = tf.keras.models.load_model('DSAI_Model_Implementation_Sourcecode/BERT_MODEL_64B_4e5LR_3E')
+    # vAR_load_model = Load_BERT_Model()
     print("--- %s seconds ---" % (time.time() - start_time))
     
 
