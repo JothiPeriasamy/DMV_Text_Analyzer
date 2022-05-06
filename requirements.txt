@@ -10,3 +10,4 @@ bokeh==2.4.1
 google-cloud-bigquery
 db-dtypes
 streamlit-option-menu
+profanity-filter

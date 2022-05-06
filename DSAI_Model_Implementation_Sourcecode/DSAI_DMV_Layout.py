@@ -12,6 +12,7 @@ import time
 from streamlit_option_menu import option_menu
 
 
+
 # import SessionState
 
 session_state_order = SessionState.get(name="", vAR_choice_orders=False)
@@ -151,8 +152,7 @@ is unacceptable''')
 
                 if len(vAR_input_list)>0 and vAR_input_len_list.count(0)<1:
                     vAR_model_result_list = Process_Result(vAR_input_list)
-                    print('Result list - ',vAR_model_result_list)
-                    print('input list - ',vAR_input_list)
+                    print('result list - ',vAR_model_result_list)
                     if vAR_model_result_list.count(False)>0:
                         col1, col2, col3 = st.columns([1.5,9,1.5])
                         with col2:
@@ -286,73 +286,92 @@ def BERT_Model_Result(vAR_input_text):
     else:
         return True,vAR_result_data,vAR_target_sum
  
-    
+
+
+
+
     
 def Process_Result(vAR_input_list):
     vAR_model_result = None
     vAR_model_result_list = [None]*4
+    vAR_pattern_result = False
     for vAR_idx,vAR_val in enumerate(vAR_input_list):
-        vAR_pattern_result = Pattern_Denial(vAR_val)
-        if  vAR_pattern_result:
-            st.write('')
+        vAR_is_badword = Profanity_Words_Check(vAR_val)
+        print('Is bad word - ',vAR_is_badword)
+        if not vAR_is_badword:
             col1, col2, col3 = st.columns([1.5,9,1.5])
             with col2:
-                st.info('ELP Configuration **'+vAR_val+ '** Successfully processed for 1st Level')
-            col1, col2, col3, col4,col_ = st.columns([1.5,4,1,4,1.5])
-            with col2:
+                st.info('ELP Configuration **'+vAR_val+ '** Successfully processed for 1st level(Configuration not Falls under profanity/obscene word category)')
+            
+            vAR_pattern_result = Pattern_Denial(vAR_val)
+            print('vAR_pattern_result - ',vAR_pattern_result)
+            if vAR_pattern_result:
                 st.write('')
-                st.write('')
-                st.subheader('Select Model')
-            with col4:
-                vAR_model = st.selectbox('',('Select Model','BERT','LSTM-RNN'),key=str(vAR_idx))
-            if vAR_model == 'LSTM-RNN':
+
                 col1, col2, col3 = st.columns([1.5,9,1.5])
                 with col2:
-                    st.write('')
-                    with st.spinner(text='Model Prediction is in-progress'):
-                        vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = LSTM_Model_Result(vAR_val) 
-                col1, col2, col3 = st.columns([3,4,3])
-                with col2:
-                    st.write('')
-                    st.write(vAR_result_data.transpose())
-                    st.write('Sum of all Category values for configuration **'+vAR_val+ '** - '+str(vAR_target_sum))
-            elif vAR_model == 'BERT':
-                col1, col2, col3 = st.columns([1.5,9,1.5])
-                with col2:
-                    st.write('')
-                    with st.spinner(text='Model Prediction is in-progress'):
-                        vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = BERT_Model_Result(vAR_val)
-                col1, col2, col3 = st.columns([3,4,3])
-                with col2:
-                    st.write('')
-                    st.write(vAR_result_data.transpose())
-                    st.write('Sum of all Category values for configuration **'+vAR_val+ '** - '+str(vAR_target_sum))
-            elif vAR_model=='Select Model':
-                st.write('')
-                col1, col2, col3 = st.columns([1.5,9,1.5])
-                with col2:
-                    st.write('')
-                    st.warning('Select model for 2nd level check for configuration** '+vAR_val+'**')
-            if vAR_model_result_list[vAR_idx]:
-                col1, col2, col3 = st.columns([1.5,9,1.5])
-                with col2:
-                    st.write('')
                     st.info('ELP Configuration **'+vAR_val+ '** Successfully processed for 2nd Level')
+                col1, col2, col3, col4,col_ = st.columns([1.5,4,1,4,1.5])
+                with col2:
                     st.write('')
-                    st.success('ELP Configuration **'+vAR_val+ '** Approved Successfully')
-            elif vAR_model_result_list[vAR_idx]==False:
+                    st.write('')
+                    st.subheader('Select Model')
+                with col4:
+                    vAR_model = st.selectbox('',('Select Model','BERT','LSTM-RNN'),key=str(vAR_idx))
+                if vAR_model == 'LSTM-RNN':
+                    col1, col2, col3 = st.columns([1.5,9,1.5])
+                    with col2:
+                        st.write('')
+                        with st.spinner(text='Model Prediction is in-progress'):
+                            vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = LSTM_Model_Result(vAR_val) 
+                    col1, col2, col3 = st.columns([3,4,3])
+                    with col2:
+                        st.write('')
+                        st.write(vAR_result_data.transpose())
+                        st.write('Sum of all Category values for configuration **'+vAR_val+ '** - '+str(vAR_target_sum))
+                elif vAR_model == 'BERT':
+                    col1, col2, col3 = st.columns([1.5,9,1.5])
+                    with col2:
+                        st.write('')
+                        with st.spinner(text='Model Prediction is in-progress'):
+                            vAR_model_result_list[vAR_idx],vAR_result_data,vAR_target_sum = BERT_Model_Result(vAR_val)
+                    col1, col2, col3 = st.columns([3,4,3])
+                    with col2:
+                        st.write('')
+                        st.write(vAR_result_data.transpose())
+                        st.write('Sum of all Category values for configuration **'+vAR_val+ '** - '+str(vAR_target_sum))
+                elif vAR_model=='Select Model':
+                    st.write('')
+                    col1, col2, col3 = st.columns([1.5,9,1.5])
+                    with col2:
+                        st.write('')
+                        st.warning('Select model for 2nd level check for configuration** '+vAR_val+'**')
+                if vAR_model_result_list[vAR_idx]:
+                    col1, col2, col3 = st.columns([1.5,9,1.5])
+                    with col2:
+                        st.write('')
+                        st.info('ELP Configuration **'+vAR_val+ '** Successfully processed for 3rd Level')
+                        st.write('')
+                        st.success('ELP Configuration **'+vAR_val+ '** Approved Successfully')
+                elif vAR_model_result_list[vAR_idx]==False:
+                    col1, col2, col3 = st.columns([1.5,9,1.5])
+                    with col2:
+                        st.write('')
+                        st.error('ELP Configuration **'+vAR_val+ '** Failed to Meet the DMV Requirements at 3rd level')
+                        Denial_Letter(vAR_idx)
+            else:
                 col1, col2, col3 = st.columns([1.5,9,1.5])
                 with col2:
+                    vAR_model_result_list[vAR_idx] = vAR_pattern_result 
                     st.write('')
                     st.error('ELP Configuration **'+vAR_val+ '** Failed to Meet the DMV Requirements at 2nd level')
                     Denial_Letter(vAR_idx)
-            # vAR_model_result_list.append(vAR_model_result_list[vAR_idx])
-
         else:
+            vAR_model_result_list[vAR_idx] = not vAR_is_badword
             col1, col2, col3 = st.columns([1.3,7.6,1.3])
             with col2:
                 st.write('')
-                st.error('ELP Configuration **'+vAR_val+ '** Failed to Meet the DMV Requirements at 1st level')
+                st.error('ELP Configuration **'+vAR_val+ '** Failed to Meet the DMV Requirements at 1st level(Configuration Falls under profanity/obscene word category)')
                 Denial_Letter(vAR_idx)
                 
     return vAR_model_result_list
@@ -367,3 +386,117 @@ def Denial_Letter(vAR_idx):
         html = '<img src onerror="{}">'.format(js)
         div = Div(text=html)
         st.bokeh_chart(div)
+        
+        
+def Profanity_Words_Check(vAR_val):
+    vAR_input = vAR_val
+    vAR_badwords_df = pd.read_csv('DSAI_Dataset/badwords_list.csv',header=None)
+    
+#---------------Profanity logic implementation with O(log n) time complexity-------------------
+    # Direct profanity check
+    vAR_badwords_df[1] = vAR_badwords_df[1].str.upper()
+    vAR_is_input_in_profanity_list = Binary_Search(vAR_badwords_df[1],vAR_input)
+    if vAR_is_input_in_profanity_list!=-1:
+        print('Input ' +vAR_val+ ' matches with direct profanity - '+vAR_badwords_df[1][vAR_is_input_in_profanity_list])
+        return True
+    
+    # Reversal profanity check
+    vAR_reverse_input = "".join(reversed(vAR_val))
+    vAR_is_input_in_profanity_list = Binary_Search(vAR_badwords_df[1],vAR_reverse_input)
+    if vAR_is_input_in_profanity_list!=-1:
+        print('Input ' +vAR_val+ ' matches with reversal profanity - '+vAR_badwords_df[1][vAR_is_input_in_profanity_list])
+        return True
+    
+    # Number replacement profanity check
+    vAR_number_replaced = Number_Replacement(vAR_val)
+    vAR_is_input_in_profanity_list = Binary_Search(vAR_badwords_df[1],vAR_number_replaced)
+    if vAR_is_input_in_profanity_list!=-1: 
+        print('Input ' +vAR_val+ ' matches with number replacement profanity - '+vAR_badwords_df[1][vAR_is_input_in_profanity_list])
+        return True
+    
+    # Reversal Number replacement profanity check(5sa->as5->ass)
+    vAR_number_replaced = Number_Replacement(vAR_reverse_input)
+    vAR_is_input_in_profanity_list = Binary_Search(vAR_badwords_df[1],vAR_number_replaced)
+    if vAR_is_input_in_profanity_list!=-1:  
+        print('Input ' +vAR_val+ ' matches with reversal number replacement profanity - '+vAR_badwords_df[1][vAR_is_input_in_profanity_list])
+        return True
+    
+    return False
+    
+    
+# ---------------Profanity logic implementation with O(n) time complexity---------------------
+#     for index, row in vAR_badwords_df.iterrows():
+#         badword = row[1].upper()
+        
+#         # Direct Profanity check
+#         if badword==vAR_val:
+#             print('Input ' +vAR_val+ ' matches with direct profanity - '+badword)
+#             return True
+        
+#         vAR_reverse_input = "".join(reversed(vAR_val))
+#         # Reversal profanity check
+#         if badword==vAR_reverse_input:
+#             print('Input ' +vAR_val+ ' matches with reversal profanity - '+badword)
+#             return True
+        
+#         # Number replacement profanity check
+#         vAR_number_replaced = Number_Replacement(vAR_val)
+#         if badword==vAR_number_replaced: 
+#             print('Input ' +vAR_val+ ' matches with number replacement profanity - '+badword)
+#             return True
+        
+#         # Reversal Number replacement profanity check(5sa->as5->ass)
+#         vAR_number_replaced = Number_Replacement(vAR_reverse_input)
+#         if badword==vAR_number_replaced: 
+#             print('Input ' +vAR_val+ ' matches with reversal number replacement profanity - '+badword)
+#             return True
+        
+#     return False
+                
+    
+def Number_Replacement(vAR_val):
+    vAR_output = vAR_val
+    if "1" in vAR_val:
+        vAR_output = vAR_output.replace("1","I")
+    if "2" in vAR_val:
+        vAR_output = vAR_output.replace("2","Z")
+    if "3" in vAR_val:
+        vAR_output = vAR_output.replace("3","E")
+    if "4" in vAR_val:
+        vAR_output = vAR_output.replace("4","A")
+    if "5" in vAR_val:
+        vAR_output = vAR_output.replace("5","S")
+    if "8" in vAR_val:
+        vAR_output = vAR_output.replace("8","B")
+        print('8 replaced with B - ',vAR_val)
+    if "0" in vAR_val:
+        vAR_output = vAR_output.replace("0","O")
+    print('number replace - ',vAR_output)
+    return vAR_output
+
+
+
+def Binary_Search(data, x):
+    low = 0
+    high = len(data) - 1
+    mid = 0
+    i =0
+    while low <= high:
+        i = i+1
+        print('No.of iteration - ',i)
+        mid = (high + low) // 2
+        
+        # If x is greater, ignore left half
+        if data[mid] < x:
+            low = mid + 1
+ 
+        # If x is smaller, ignore right half
+        elif data[mid] > x:
+            high = mid - 1
+ 
+        # means x is present at mid
+        else:
+            return mid
+ 
+    # If we reach here, then the element was not present
+    return -1
